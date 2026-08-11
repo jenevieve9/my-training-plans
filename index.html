@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
+    <title>训练跟进 · 高级版</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, "PingFang SC", "Helvetica Neue", system-ui, sans-serif;
+            background: #f2efe9;
+            /* 高级米灰底 */
+            padding: 20px 16px 40px;
+            color: #26221e;
+            min-height: 100vh;
+        }
+
+        .page-title {
+            font-size: 26px;
+            font-weight: 300;
+            letter-spacing: 1px;
+            padding: 8px 0 16px 2px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: #2c2823;
+            border-bottom: 1px solid #d9d2c5;
+            margin-bottom: 28px;
+        }
+        .page-title span {
+            font-size: 13px;
+            font-weight: 400;
+            background: #d9d2c5;
+            color: #3d3831;
+            padding: 0 16px;
+            border-radius: 30px;
+            line-height: 28px;
+            letter-spacing: 0.4px;
+        }
+
+        /* ---- 卡片区块 ---- */
+        .block {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 20px 18px 18px;
+            margin-bottom: 24px;
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.04), 0 2px 4px rgba(0, 0, 0, 0.02);
+            border: 1px solid #e7e0d6;
+            transition: border 0.2s;
+        }
+
+        .block-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+        .block-header h2 {
+            font-size: 20px;
+            font-weight: 400;
+            letter-spacing: 0.2px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #3a3530;
+        }
+        .block-header h2 .emoji-badge {
+            font-size: 22px;
+            font-weight: 300;
+        }
+        .block-header .time-tag {
+            font-size: 12px;
+            background: #ece6dd;
+            padding: 2px 14px;
+            border-radius: 30px;
+            color: #5e5546;
+            font-weight: 400;
+            letter-spacing: 0.3px;
+        }
+
+        .block-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 4px;
+        }
+        .btn-soft {
+            background: #ece6dd;
+            border: none;
+            color: #4d453c;
+            font-size: 13px;
+            font-weight: 400;
+            padding: 4px 14px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: background 0.15s;
+            font-family: inherit;
+            letter-spacing: 0.3px;
+        }
+        .btn-soft:active {
+            background: #dbd2c4;
+        }
+
+        /* ---- 课程列表 ---- */
+        .course-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .course-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 14px;
+            background: #f8f5f0;
+            border-radius: 16px;
+            transition: background 0.15s;
+            border: 1px solid transparent;
+            min-height: 50px;
+            gap: 6px;
+        }
+        .course-item:active {
+            background: #f0ebe2;
+            border-color: #d5cdbf;
+        }
+
+        .course-item .idx {
+            font-size: 13px;
+            font-weight: 300;
+            color: #aea392;
+            margin-right: 8px;
+            min-width: 24px;
+            text-align: right;
+            letter-spacing: 0.2px;
+        }
+
+        .course-item .name-wrap {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 2px 6px;
+            text-decoration: none;
+            color: #2c2823;
+        }
+        .course-item .name-wrap .name {
+            font-size: 16px;
+            font-weight: 400;
+            line-height: 1.4;
+        }
+        .course-item .name-wrap .sub {
+            font-weight: 300;
+            font-size: 13px;
+            color: #8f8476;
+        }
+
+        .course-item .arrow {
+            color: #cbc1b2;
+            font-size: 18px;
+            margin-left: 4px;
+            flex-shrink: 0;
+        }
+
+        .btn-delete {
+            background: none;
+            border: none;
+            color: #c4b9a8;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 0 0 0 8px;
+            transition: color 0.15s;
+            line-height: 1;
+            font-weight: 300;
+            flex-shrink: 0;
+        }
+        .btn-delete:active {
+            color: #b85c4a;
+        }
+
+        /* ---- 中午特殊框 ---- */
+        .mid-block {
+            background: #fcf9f5;
+            border: 2px dashed #d6cdbe;
+            border-radius: 24px;
+            padding: 20px 18px 18px;
+            margin-bottom: 24px;
+        }
+
+        .mid-placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            padding: 18px 10px;
+            color: #b3a797;
+            font-size: 15px;
+            font-weight: 300;
+            border-radius: 16px;
+            background: #f5f0e9;
+            border: 1px solid #e5ddd2;
+            min-height: 64px;
+            flex-wrap: wrap;
+        }
+        .mid-placeholder .hint {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .mid-placeholder .hint span {
+            font-size: 22px;
+        }
+
+        .btn-add {
+            background: #e5ddd2;
+            border: none;
+            color: #3d3831;
+            font-size: 14px;
+            font-weight: 400;
+            padding: 6px 20px;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: background 0.15s;
+            font-family: inherit;
+            letter-spacing: 0.3px;
+        }
+        .btn-add:active {
+            background: #d3c9ba;
+        }
+
+        .course-item.mid-added {
+            background: #f5f0e9;
+        }
+
+        .empty-tip {
+            color: #bfb5a6;
+            font-size: 14px;
+            padding: 4px 2px;
+            font-weight: 300;
+        }
+
+        /* ---- 底部 ---- */
+        .footer-note {
+            margin-top: 16px;
+            font-size: 13px;
+            color: #bfb5a6;
+            text-align: center;
+            letter-spacing: 0.4px;
+            border-top: 1px solid #e1dad0;
+            padding-top: 22px;
+            font-weight: 300;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* 全局高级感 */
+        ::selection {
+            background: #d9d2c5;
+            color: #2c2823;
+        }
+
+        /* 响应式微调 */
+        @media (max-width: 400px) {
+            .block {
+                padding: 16px 14px;
+            }
+            .course-item {
+                padding: 10px 12px;
+            }
+        }
+
+        /* ========= 排版优化版 ========= */
+        :root {
+            --ink: #1c1d19;
+            --ink-soft: #55564f;
+            --paper: #f4f1e9;
+            --card: #fffdf8;
+            --line: #ded9cd;
+            --lime: #dfff58;
+            --coral: #ff8067;
+            --shadow: 0 18px 50px rgba(41, 37, 29, 0.08);
+        }
+
+        html {
+            scroll-behavior: smooth;
+            background: var(--paper);
+        }
+
+        body {
+            padding: 0;
+            background:
+                radial-gradient(circle at 8% 2%, rgba(223, 255, 88, 0.22), transparent 27%),
+                radial-gradient(circle at 96% 14%, rgba(255, 128, 103, 0.11), transparent 24%),
+                var(--paper);
+            color: var(--ink);
+        }
+
+        button,
+        a {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .app-shell {
+            width: min(100%, 720px);
+            margin: 0 auto;
+            padding: max(22px, env(safe-area-inset-top)) 16px calc(54px + env(safe-area-inset-bottom));
+        }
+
+        .page-title {
+            display: block;
+            position: relative;
+            overflow: hidden;
+            min-height: 250px;
+            margin: 0 0 18px;
+            padding: 22px;
+            color: #fff;
+            border: 0;
+            border-radius: 30px;
+            background: var(--ink);
+            box-shadow: var(--shadow);
+        }
+
+        .page-title::after {
+            content: "";
+            position: absolute;
+            right: -38px;
+            top: -50px;
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: var(--lime);
+            opacity: 0.94;
+        }
+
+        .title-top,
+        .title-main,
+        .schedule-overview {
+            position: relative;
+            z-index: 1;
+        }
+
+        .title-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .eyebrow {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 1.8px;
+            color: rgba(255, 255, 255, 0.62);
+        }
+
+        .page-title .today-badge {
+            padding: 7px 13px;
+            color: var(--ink);
+            background: var(--lime);
+            font-size: 12px;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .title-main {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            margin: 34px 0 28px;
+        }
+
+        .title-main h1 {
+            font-size: clamp(38px, 10vw, 58px);
+            line-height: 0.98;
+            letter-spacing: -2.6px;
+            font-weight: 760;
+        }
+
+        .title-main h1 i {
+            color: var(--coral);
+            font-style: normal;
+        }
+
+        .title-main p {
+            max-width: 340px;
+            margin-top: 12px;
+            font-size: 13px;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.6);
+            letter-spacing: 0.2px;
+        }
+
+        .bolt-mark {
+            display: grid;
+            place-items: center;
+            width: 54px;
+            height: 54px;
+            flex: 0 0 54px;
+            margin-right: 2px;
+            color: var(--ink);
+            background: var(--coral);
+            border-radius: 50%;
+            font-size: 24px;
+            transform: rotate(7deg);
+        }
+
+        .schedule-overview {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        .schedule-overview a {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 48px;
+            padding: 10px 12px;
+            color: #fff;
+            text-decoration: none;
+            border: 1px solid rgba(255, 255, 255, 0.13);
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .schedule-overview span {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .schedule-overview strong {
+            font-size: 19px;
+            font-weight: 650;
+        }
+
+        .block,
+        .mid-block {
+            padding: 20px;
+            margin-bottom: 14px;
+            border: 1px solid var(--line);
+            border-radius: 26px;
+            background: rgba(255, 253, 248, 0.92);
+            box-shadow: 0 12px 32px rgba(41, 37, 29, 0.055);
+            backdrop-filter: blur(12px);
+        }
+
+        .mid-block {
+            border-style: solid;
+            background: rgba(250, 248, 241, 0.9);
+        }
+
+        .block-header {
+            align-items: flex-start;
+            margin-bottom: 18px;
+        }
+
+        .heading-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-number {
+            display: grid;
+            place-items: center;
+            width: 34px;
+            height: 34px;
+            border: 1px solid var(--line);
+            border-radius: 50%;
+            color: #8b867c;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .block-header .section-label {
+            margin-bottom: 3px;
+            color: #999387;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        .block-header h2 {
+            gap: 7px;
+            color: var(--ink);
+            font-size: 21px;
+            font-weight: 680;
+            letter-spacing: -0.4px;
+        }
+
+        .block-header h2 .emoji-badge {
+            font-size: 18px;
+        }
+
+        .block-header .time-tag {
+            padding: 7px 11px;
+            color: #666158;
+            background: #efebe1;
+            font-size: 10px;
+            font-weight: 700;
+            line-height: 1;
+            letter-spacing: 0.8px;
+        }
+
+        .course-list {
+            gap: 8px;
+        }
+
+        .course-item {
+            display: grid;
+            grid-template-columns: 34px minmax(0, 1fr) 26px 32px;
+            gap: 6px;
+            min-height: 62px;
+            padding: 8px 8px 8px 10px;
+            border: 1px solid #e9e4da;
+            border-radius: 17px;
+            background: #faf8f2;
+        }
+
+        .course-item:hover {
+            border-color: #d7d0c2;
+            background: #fffdf8;
+        }
+
+        .course-item .idx {
+            display: grid;
+            place-items: center;
+            min-width: 0;
+            height: 34px;
+            margin: 0;
+            border-radius: 11px;
+            background: #eeeadf;
+            color: #8b8579;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .course-item .name-wrap {
+            align-self: stretch;
+            align-content: center;
+            padding: 4px 2px;
+        }
+
+        .course-item .name-wrap .name {
+            font-size: 15px;
+            font-weight: 560;
+            line-height: 1.38;
+        }
+
+        .course-item .name-wrap .sub {
+            width: 100%;
+            margin-top: 1px;
+            color: #8b8579;
+            font-size: 11px;
+        }
+
+        .course-item .arrow {
+            align-self: center;
+            color: #aaa397;
+            font-size: 20px;
+        }
+
+        .btn-delete {
+            align-self: center;
+            display: grid;
+            place-items: center;
+            width: 30px;
+            height: 30px;
+            padding: 0;
+            border-radius: 50%;
+            color: #a9a296;
+            background: transparent;
+            font-size: 14px;
+        }
+
+        .btn-delete:hover {
+            color: #a64032;
+            background: #f9e5df;
+        }
+
+        .block-actions,
+        .mid-actions {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 8px;
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px solid #ebe6db;
+        }
+
+        .btn-soft,
+        .btn-add {
+            min-height: 36px;
+            padding: 8px 14px;
+            border: 1px solid #ddd6ca;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 650;
+        }
+
+        .btn-soft {
+            color: #615c53;
+            background: transparent;
+        }
+
+        .btn-add {
+            color: var(--ink);
+            border-color: var(--lime);
+            background: var(--lime);
+        }
+
+        .mid-placeholder {
+            min-height: 112px;
+            padding: 22px 16px;
+            border: 1px dashed #cec6b8;
+            border-radius: 18px;
+            background: #f7f4ed;
+            color: #8f897e;
+        }
+
+        .footer-note {
+            max-width: 520px;
+            margin: 24px auto 0;
+            padding: 18px 24px 0;
+            border-color: #dcd6ca;
+            color: #9b9589;
+            line-height: 1.7;
+        }
+
+        @media (max-width: 520px) {
+            .app-shell {
+                padding-left: 12px;
+                padding-right: 12px;
+            }
+
+            .page-title {
+                min-height: 236px;
+                padding: 20px;
+                border-radius: 26px;
+            }
+
+            .page-title::after {
+                right: -60px;
+                top: -66px;
+            }
+
+            .title-main {
+                margin: 31px 0 25px;
+            }
+
+            .title-main p {
+                max-width: 250px;
+            }
+
+            .bolt-mark {
+                width: 48px;
+                height: 48px;
+                flex-basis: 48px;
+                font-size: 21px;
+            }
+
+            .schedule-overview a {
+                display: block;
+                min-height: 50px;
+                padding: 8px 10px;
+            }
+
+            .schedule-overview strong {
+                display: block;
+                margin-top: 2px;
+            }
+
+            .block,
+            .mid-block {
+                padding: 17px 14px;
+                border-radius: 23px;
+            }
+
+            .course-item {
+                grid-template-columns: 32px minmax(0, 1fr) 18px 28px;
+                padding: 8px 6px 8px 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="app-shell">
+    <header class="page-title">
+        <div class="title-top">
+            <span class="eyebrow">DAILY TRAINING · TODAY</span>
+            <span class="today-badge">今日</span>
+        </div>
+        <div class="title-main">
+            <div>
+                <h1>训练跟进<i>。</i></h1>
+                <p>早晚有计划，中午留给身体自由选择。点击课程即可直接开始训练。</p>
+            </div>
+            <span class="bolt-mark" aria-hidden="true">⚡</span>
+        </div>
+        <nav class="schedule-overview" aria-label="今日训练概览">
+            <a href="#morningBlock"><span>早上</span><strong id="morningCount">6</strong></a>
+            <a href="#midBlock"><span>中午</span><strong id="midCount">0</strong></a>
+            <a href="#eveningBlock"><span>晚上</span><strong id="eveningCount">7</strong></a>
+        </nav>
+    </header>
+
+    <!-- ========= 早 上 ========= -->
+    <div class="block" id="morningBlock">
+        <div class="block-header">
+            <div class="heading-group">
+                <span class="section-number">01</span>
+                <div><p class="section-label">Morning plan</p><h2><span class="emoji-badge">🌅</span>早上</h2></div>
+            </div>
+            <span class="time-tag">AM</span>
+        </div>
+        <div class="course-list" id="morningList"></div>
+        <div class="block-actions">
+            <button class="btn-soft" id="resetMorningBtn">↻ 重置早课</button>
+        </div>
+    </div>
+
+    <!-- ========= 中 午 ========= -->
+    <div class="mid-block" id="midBlock">
+        <div class="block-header">
+            <div class="heading-group">
+                <span class="section-number">02</span>
+                <div><p class="section-label">Flexible session</p><h2><span class="emoji-badge">☀️</span>中午</h2></div>
+            </div>
+            <span class="time-tag">自由</span>
+        </div>
+        <div id="midList" class="course-list"></div>
+        <div class="mid-actions">
+            <button class="btn-add" id="addMidBtn">＋ 添加课程</button>
+            <button class="btn-soft" id="clearMidBtn">清空</button>
+        </div>
+    </div>
+
+    <!-- ========= 晚 上 ========= -->
+    <div class="block" id="eveningBlock">
+        <div class="block-header">
+            <div class="heading-group">
+                <span class="section-number">03</span>
+                <div><p class="section-label">Evening plan</p><h2><span class="emoji-badge">🌃</span>晚上</h2></div>
+            </div>
+            <span class="time-tag">PM</span>
+        </div>
+        <div class="course-list" id="eveningList"></div>
+        <div class="block-actions">
+            <button class="btn-soft" id="resetEveningBtn">↻ 重置晚课</button>
+        </div>
+    </div>
+
+    <div class="footer-note">
+        点击课程跳转 · 点击 ✕ 删除 · 重置可恢复初始
+    </div>
+    </main>
+
+    <script>
+        // -------------------------------------------------------------
+        // 初始数据（早晚可重置，中午可增删）
+        // -------------------------------------------------------------
+        const DEFAULT_MORNING = [
+            { name: '帕梅拉10分钟拉伸', url: 'https://www.bilibili.com/video/BV1gf4y1p78A' },
+            { name: '韩小四燃脂操', url: 'https://www.bilibili.com/video/BV1EmNneFEZD/' },
+            { name: '安娜哑铃手臂塑形', url: 'https://www.snm0516.aisee.tv/video/BV1JQYkzWEPY/' },
+            { name: '9分钟面部瑜伽紧致皮肤', url: 'https://www.snm0516.aisee.tv/video/BV1UGcjzVEuQ/' },
+            { name: '体态大师气场女王', url: 'https://www.bilibili.com/video/BV1MWEu6WEr5/' },
+            { name: '欧阳春晓骨盆回正', url: 'https://www.bilibili.com/video/BV1yhgZ6YE1b/' }
+        ];
+
+        const DEFAULT_EVENING = [
+            { name: '帕梅拉3部曲（30分钟）', url: 'https://www.bilibili.com/video/BV1CDoMBzEvJ' },
+            { name: '帕梅拉10分钟拉伸', url: 'https://www.bilibili.com/video/BV1gf4y1p78A' },
+            { name: '欧阳春晓新版练背+直角肩', url: 'https://www.snm0516.aisee.tv/video/BV1zgDMBLEw6/' },
+            { name: '欧阳春晓芭杆沙漏腰', url: 'https://www.snm0516.aisee.tv/video/BV1fCb8zGEpW/' },
+            { name: '欧阳春晓恢复胸腔10分钟', url: 'https://www.bilibili.com/video/BV1nm41157mJ/' },
+            { name: 'Yuuka去除双下巴', url: 'https://www.bilibili.com/video/BV1eY411j7bF/' },
+            { name: '体态大师气场女王', url: 'https://www.bilibili.com/video/BV1yhgZ6YE1b/' }
+        ];
+
+        // 当前状态（可变）
+        let morningCourses = [...DEFAULT_MORNING];
+        let eveningCourses = [...DEFAULT_EVENING];
+        let midCourses = [];
+
+        function updateOverview() {
+            const counts = {
+                morningCount: morningCourses.length,
+                midCount: midCourses.length,
+                eveningCount: eveningCourses.length
+            };
+            Object.entries(counts).forEach(([id, count]) => {
+                const node = document.getElementById(id);
+                if (node) node.textContent = count;
+            });
+        }
+
+        // -------------------------------------------------------------
+        // 渲染函数（统一）
+        // -------------------------------------------------------------
+        function renderList(containerId, courses, listType) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+
+            if (!courses || courses.length === 0) {
+                container.innerHTML = `<div class="empty-tip">暂无课程</div>`;
+                updateOverview();
+                return;
+            }
+
+            let html = '';
+            courses.forEach((item, index) => {
+                const idx = String(index + 1).padStart(2, '0');
+                let displayName = item.name;
+                let subText = '';
+                const match = item.name.match(/^(.*?)(\(.*\))$/);
+                if (match) {
+                    displayName = match[1].trim();
+                    subText = match[2];
+                }
+                // 删除按钮 data-type 用于区分列表
+                html += `
+                    <div class="course-item ${listType === 'mid' ? 'mid-added' : ''}">
+                        <span class="idx">${idx}</span>
+                        <a class="name-wrap" href="${item.url}" target="_blank" rel="noopener">
+                            <span class="name">${displayName}</span>
+                            <span class="sub">${subText}</span>
+                        </a>
+                        <span class="arrow">›</span>
+                        <button class="btn-delete" data-list="${listType}" data-index="${index}" aria-label="删除课程">✕</button>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+            updateOverview();
+
+            // 绑定删除事件
+            container.querySelectorAll('.btn-delete').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const list = this.getAttribute('data-list');
+                    const idx = parseInt(this.getAttribute('data-index'), 10);
+                    if (isNaN(idx)) return;
+
+                    if (list === 'morning') {
+                        if (morningCourses.length === 0) return;
+                        if (confirm('删除此早课？')) {
+                            morningCourses.splice(idx, 1);
+                            renderList('morningList', morningCourses, 'morning');
+                        }
+                    } else if (list === 'evening') {
+                        if (eveningCourses.length === 0) return;
+                        if (confirm('删除此晚课？')) {
+                            eveningCourses.splice(idx, 1);
+                            renderList('eveningList', eveningCourses, 'evening');
+                        }
+                    } else if (list === 'mid') {
+                        if (midCourses.length === 0) return;
+                        if (confirm('删除此中午课程？')) {
+                            midCourses.splice(idx, 1);
+                            renderMidList(); // 特殊处理
+                        }
+                    }
+                });
+            });
+        }
+
+        // 中午渲染（因为占位逻辑特殊）
+        function renderMidList() {
+            const container = document.getElementById('midList');
+            if (!container) return;
+
+            if (midCourses.length === 0) {
+                container.innerHTML = `
+                    <div class="mid-placeholder" id="midPlaceholder">
+                        <span class="hint"><span>✏️</span> 点击下方添加课程</span>
+                        <button class="btn-add" id="addMidBtnPlaceholder">＋ 添加</button>
+                    </div>
+                `;
+                document.getElementById('addMidBtnPlaceholder')?.addEventListener('click', addMidCourse);
+                updateOverview();
+                return;
+            }
+
+            // 有课程，调用通用渲染，但传入 type 'mid'
+            renderList('midList', midCourses, 'mid');
+            updateOverview();
+        }
+
+        // 重置函数
+        function resetMorning() {
+            if (confirm('重置早课为初始列表？')) {
+                morningCourses = [...DEFAULT_MORNING];
+                renderList('morningList', morningCourses, 'morning');
+            }
+        }
+        function resetEvening() {
+            if (confirm('重置晚课为初始列表？')) {
+                eveningCourses = [...DEFAULT_EVENING];
+                renderList('eveningList', eveningCourses, 'evening');
+            }
+        }
+
+        // 添加中午课程
+        function addMidCourse() {
+            const name = prompt('请输入课程名称（如：爬坡 30min）：');
+            if (name === null || name.trim() === '') return;
+            const url = prompt('请输入 B 站链接（URL）：');
+            if (url === null || url.trim() === '') return;
+            const trimmedUrl = url.trim();
+            if (!trimmedUrl.startsWith('http://') && !trimmedUrl.startsWith('https://')) {
+                alert('请以 http:// 或 https:// 开头');
+                return;
+            }
+            midCourses.push({ name: name.trim(), url: trimmedUrl });
+            renderMidList();
+        }
+
+        function clearMid() {
+            if (midCourses.length === 0) return;
+            if (confirm('清空所有中午课程？')) {
+                midCourses = [];
+                renderMidList();
+            }
+        }
+
+        // -------------------------------------------------------------
+        // 初始化
+        // -------------------------------------------------------------
+        document.addEventListener('DOMContentLoaded', function() {
+            // 渲染早、晚
+            renderList('morningList', morningCourses, 'morning');
+            renderList('eveningList', eveningCourses, 'evening');
+
+            // 渲染中午
+            renderMidList();
+
+            // 绑定重置按钮
+            document.getElementById('resetMorningBtn')?.addEventListener('click', resetMorning);
+            document.getElementById('resetEveningBtn')?.addEventListener('click', resetEvening);
+
+            // 绑定添加按钮
+            document.getElementById('addMidBtn')?.addEventListener('click', addMidCourse);
+            document.getElementById('clearMidBtn')?.addEventListener('click', clearMid);
+
+            // 额外，如果占位按钮存在（已在 renderMidList 里绑定）
+        });
+    </script>
+
+</body>
+</html>
