@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
-    <title>训练跟进 · 高级版</title>
+    <title>训练跟进 · 8.16—9.30</title>
     <style>
         * {
             margin: 0;
@@ -635,6 +635,198 @@
             line-height: 1.7;
         }
 
+        .checkin-panel {
+            margin-bottom: 14px;
+            padding: 20px;
+            border: 1px solid var(--line);
+            border-radius: 26px;
+            background: rgba(255, 253, 248, 0.94);
+            box-shadow: 0 12px 32px rgba(41, 37, 29, 0.055);
+        }
+
+        .checkin-heading,
+        .selected-date-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .checkin-heading .section-label {
+            margin-bottom: 5px;
+            color: #999387;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+        }
+
+        .checkin-heading h2 {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .checkin-score {
+            display: flex;
+            align-items: baseline;
+            white-space: nowrap;
+        }
+
+        .checkin-score strong {
+            font-size: 28px;
+            line-height: 1;
+        }
+
+        .checkin-score span {
+            margin-left: 4px;
+            color: #918b7f;
+            font-size: 11px;
+        }
+
+        .checkin-progress {
+            height: 7px;
+            margin: 17px 0 14px;
+            overflow: hidden;
+            border-radius: 999px;
+            background: #e9e5dc;
+        }
+
+        .checkin-progress span {
+            display: block;
+            width: 0;
+            height: 100%;
+            border-radius: inherit;
+            background: var(--lime);
+            transition: width 0.25s ease;
+        }
+
+        .date-strip {
+            display: flex;
+            gap: 7px;
+            overflow-x: auto;
+            margin: 0 -4px;
+            padding: 3px 4px 10px;
+            scrollbar-width: none;
+            scroll-snap-type: x proximity;
+        }
+
+        .date-strip::-webkit-scrollbar {
+            display: none;
+        }
+
+        .date-button {
+            position: relative;
+            display: grid;
+            place-items: center;
+            flex: 0 0 54px;
+            min-height: 66px;
+            padding: 7px 5px;
+            border: 1px solid #e2ddd2;
+            border-radius: 16px;
+            color: #7a756c;
+            background: #f8f5ef;
+            cursor: pointer;
+            scroll-snap-align: center;
+            font-family: inherit;
+        }
+
+        .date-button span {
+            font-size: 9px;
+            font-weight: 650;
+        }
+
+        .date-button strong {
+            font-size: 18px;
+            line-height: 1;
+            color: var(--ink);
+        }
+
+        .date-button small {
+            font-size: 8px;
+            color: #a09a90;
+        }
+
+        .date-button.has-record::after {
+            content: "";
+            position: absolute;
+            right: 6px;
+            top: 6px;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--coral);
+        }
+
+        .date-button.complete::after {
+            background: var(--lime);
+            box-shadow: 0 0 0 2px rgba(28, 29, 25, 0.55);
+        }
+
+        .date-button.active {
+            color: #fff;
+            border-color: var(--ink);
+            background: var(--ink);
+            transform: translateY(-2px);
+        }
+
+        .date-button.active strong,
+        .date-button.active small {
+            color: #fff;
+        }
+
+        .selected-date-row {
+            margin-top: 3px;
+            padding: 12px 13px;
+            border-radius: 15px;
+            background: #f1ede4;
+        }
+
+        .selected-date-row div span {
+            display: block;
+            margin-bottom: 2px;
+            color: #969084;
+            font-size: 9px;
+            font-weight: 650;
+            letter-spacing: 0.8px;
+        }
+
+        .selected-date-row div strong {
+            font-size: 15px;
+        }
+
+        .selected-status {
+            padding: 6px 10px;
+            border-radius: 999px;
+            color: #6f695f;
+            background: #fffdf8;
+            font-size: 10px;
+            font-weight: 650;
+        }
+
+        .selected-status.complete {
+            color: var(--ink);
+            background: var(--lime);
+        }
+
+        .btn-check {
+            min-height: 38px;
+            padding: 8px 16px;
+            border: 1px solid var(--ink);
+            border-radius: 12px;
+            color: #fff;
+            background: var(--ink);
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .btn-check.checked {
+            color: var(--ink);
+            border-color: var(--lime);
+            background: var(--lime);
+        }
+
         @media (max-width: 520px) {
             .app-shell {
                 padding-left: 12px;
@@ -679,9 +871,18 @@
             }
 
             .block,
-            .mid-block {
+            .mid-block,
+            .checkin-panel {
                 padding: 17px 14px;
                 border-radius: 23px;
+            }
+
+            .checkin-heading h2 {
+                font-size: 18px;
+            }
+
+            .block-actions {
+                justify-content: space-between;
             }
 
             .course-item {
@@ -695,35 +896,52 @@
     <main class="app-shell">
     <header class="page-title">
         <div class="title-top">
-            <span class="eyebrow">DAILY TRAINING · TODAY</span>
-            <span class="today-badge">今日</span>
+            <span class="eyebrow">TRAINING RESET · 46 DAYS</span>
+            <span class="today-badge">8.16—9.30</span>
         </div>
         <div class="title-main">
             <div>
                 <h1>训练跟进<i>。</i></h1>
-                <p>早晚有计划，中午留给身体自由选择。点击课程即可直接开始训练。</p>
+                <p>早上专注背与肩膀，晚上完成有氧和腰腹。选日期、练完即打卡。</p>
             </div>
             <span class="bolt-mark" aria-hidden="true">⚡</span>
         </div>
         <nav class="schedule-overview" aria-label="今日训练概览">
-            <a href="#morningBlock"><span>早上</span><strong id="morningCount">6</strong></a>
+            <a href="#morningBlock"><span>早上 · 59min</span><strong id="morningCount">3</strong></a>
             <a href="#midBlock"><span>中午</span><strong id="midCount">0</strong></a>
-            <a href="#eveningBlock"><span>晚上</span><strong id="eveningCount">7</strong></a>
+            <a href="#eveningBlock"><span>晚上 · 70min</span><strong id="eveningCount">3</strong></a>
         </nav>
     </header>
+
+    <section class="checkin-panel" aria-labelledby="checkinTitle">
+        <div class="checkin-heading">
+            <div>
+                <p class="section-label">CHECK-IN CALENDAR</p>
+                <h2 id="checkinTitle">8月16日—9月30日</h2>
+            </div>
+            <div class="checkin-score"><strong id="completeDays">0</strong><span>/ 46 天</span></div>
+        </div>
+        <div class="checkin-progress" aria-label="挑战打卡进度"><span id="checkinProgress"></span></div>
+        <div class="date-strip" id="dateStrip" aria-label="选择打卡日期"></div>
+        <div class="selected-date-row">
+            <div><span>当前打卡</span><strong id="selectedDateLabel">8月16日</strong></div>
+            <span class="selected-status" id="selectedStatus">今日待完成 2 项</span>
+        </div>
+    </section>
 
     <!-- ========= 早 上 ========= -->
     <div class="block" id="morningBlock">
         <div class="block-header">
             <div class="heading-group">
                 <span class="section-number">01</span>
-                <div><p class="section-label">Morning plan</p><h2><span class="emoji-badge">🌅</span>早上</h2></div>
+                <div><p class="section-label">BACK + SHOULDERS</p><h2><span class="emoji-badge">🌅</span>早上 · 背＋肩膀</h2></div>
             </div>
-            <span class="time-tag">AM</span>
+            <span class="time-tag">约 1 小时</span>
         </div>
         <div class="course-list" id="morningList"></div>
         <div class="block-actions">
             <button class="btn-soft" id="resetMorningBtn">↻ 重置早课</button>
+            <button class="btn-check" id="morningCheckBtn">完成早间训练</button>
         </div>
     </div>
 
@@ -748,18 +966,19 @@
         <div class="block-header">
             <div class="heading-group">
                 <span class="section-number">03</span>
-                <div><p class="section-label">Evening plan</p><h2><span class="emoji-badge">🌃</span>晚上</h2></div>
+                <div><p class="section-label">CARDIO + ABS</p><h2><span class="emoji-badge">🌃</span>晚上 · 有氧＋腰腹</h2></div>
             </div>
-            <span class="time-tag">PM</span>
+            <span class="time-tag">70 MIN</span>
         </div>
         <div class="course-list" id="eveningList"></div>
         <div class="block-actions">
             <button class="btn-soft" id="resetEveningBtn">↻ 重置晚课</button>
+            <button class="btn-check" id="eveningCheckBtn">完成晚间训练</button>
         </div>
     </div>
 
     <div class="footer-note">
-        点击课程跳转 · 点击 ✕ 删除 · 重置可恢复初始
+        点击课程跳转 · 早晚训练按日期打卡 · 记录保存在当前设备
     </div>
     </main>
 
@@ -768,28 +987,67 @@
         // 初始数据（早晚可重置，中午可增删）
         // -------------------------------------------------------------
         const DEFAULT_MORNING = [
-            { name: '帕梅拉10分钟拉伸', url: 'https://www.bilibili.com/video/BV1gf4y1p78A' },
-            { name: '韩小四燃脂操', url: 'https://www.bilibili.com/video/BV1EmNneFEZD/' },
-            { name: '安娜哑铃手臂塑形', url: 'https://www.snm0516.aisee.tv/video/BV1JQYkzWEPY/' },
-            { name: '9分钟面部瑜伽紧致皮肤', url: 'https://www.snm0516.aisee.tv/video/BV1UGcjzVEuQ/' },
-            { name: '体态大师气场女王', url: 'https://www.bilibili.com/video/BV1MWEu6WEr5/' },
-            { name: '欧阳春晓骨盆回正', url: 'https://www.bilibili.com/video/BV1yhgZ6YE1b/' }
+            { name: '高效练背瘦手臂 · 欧阳春晓美肩组合', duration: '40 分钟', url: 'https://www.bilibili.com/video/BV1h5ub6ZES5/?share_source=copy_web&vd_source=d9bd0a1eb5c0ae36b77c2e342f262c5f' },
+            { name: 'MIZI 瘦脸＋下巴赘肉训练', duration: '9 分钟', url: 'https://www.bilibili.com/video/BV1iyhHzDEKT/?share_source=copy_web&vd_source=d9bd0a1eb5c0ae36b77c2e342f262c5f' },
+            { name: '抢救上半身破烂体态 · 恢复胸廓弹性', duration: '10 分钟', url: 'https://www.bilibili.com/video/BV1qQULYPENn/?share_source=copy_web&vd_source=d9bd0a1eb5c0ae36b77c2e342f262c5f' }
         ];
 
         const DEFAULT_EVENING = [
-            { name: '帕梅拉3部曲（30分钟）', url: 'https://www.bilibili.com/video/BV1CDoMBzEvJ' },
-            { name: '帕梅拉10分钟拉伸', url: 'https://www.bilibili.com/video/BV1gf4y1p78A' },
-            { name: '欧阳春晓新版练背+直角肩', url: 'https://www.snm0516.aisee.tv/video/BV1zgDMBLEw6/' },
-            { name: '欧阳春晓芭杆沙漏腰', url: 'https://www.snm0516.aisee.tv/video/BV1fCb8zGEpW/' },
-            { name: '欧阳春晓恢复胸腔10分钟', url: 'https://www.bilibili.com/video/BV1nm41157mJ/' },
-            { name: 'Yuuka去除双下巴', url: 'https://www.bilibili.com/video/BV1eY411j7bF/' },
-            { name: '体态大师气场女王', url: 'https://www.bilibili.com/video/BV1yhgZ6YE1b/' }
+            { name: '帕梅拉三部曲 DJ 版 · 有氧暴汗燃脂', duration: '30 分钟', url: 'https://www.bilibili.com/video/BV1pHLU67E9U/?share_source=copy_web&vd_source=d9bd0a1eb5c0ae36b77c2e342f262c5f' },
+            { name: '极简专攻腹部 · 春晓呼吸＋虐腹＋下腹', duration: '32 分钟', url: 'https://www.bilibili.com/video/BV1T8u96REG7/?share_source=copy_web&vd_source=d9bd0a1eb5c0ae36b77c2e342f262c5f' },
+            { name: '韩小四瘦手臂 · 锁骨直角肩', duration: '8 分钟', url: 'https://www.bilibili.com/video/BV1W7411c7rH/?share_source=copy_web&vd_source=d9bd0a1eb5c0ae36b77c2e342f262c5f' }
         ];
+
+        const CHECKIN_START = new Date('2026-08-16T12:00:00');
+        const CHECKIN_END = new Date('2026-09-30T12:00:00');
+        const CHECKIN_STORAGE_KEY = 'training-checkins-20260816-20260930';
+        const CHECKIN_DAYS = 46;
 
         // 当前状态（可变）
         let morningCourses = [...DEFAULT_MORNING];
         let eveningCourses = [...DEFAULT_EVENING];
         let midCourses = [];
+        let checkins = loadCheckins();
+        let selectedDate = getInitialDate();
+
+        function dateKey(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        function addDays(date, amount) {
+            const next = new Date(date);
+            next.setDate(next.getDate() + amount);
+            return next;
+        }
+
+        function loadCheckins() {
+            try {
+                const saved = JSON.parse(localStorage.getItem(CHECKIN_STORAGE_KEY));
+                return saved && typeof saved === 'object' ? saved : {};
+            } catch {
+                return {};
+            }
+        }
+
+        function getInitialDate() {
+            const today = new Date();
+            today.setHours(12, 0, 0, 0);
+            if (today < CHECKIN_START) return dateKey(CHECKIN_START);
+            if (today > CHECKIN_END) return dateKey(CHECKIN_END);
+            return dateKey(today);
+        }
+
+        function selectedRecord() {
+            checkins[selectedDate] ||= { morning: false, evening: false };
+            return checkins[selectedDate];
+        }
+
+        function saveCheckins() {
+            localStorage.setItem(CHECKIN_STORAGE_KEY, JSON.stringify(checkins));
+        }
 
         function updateOverview() {
             const counts = {
@@ -801,6 +1059,62 @@
                 const node = document.getElementById(id);
                 if (node) node.textContent = count;
             });
+        }
+
+        function renderCheckins() {
+            const weekday = ['日', '一', '二', '三', '四', '五', '六'];
+            const strip = document.getElementById('dateStrip');
+            strip.innerHTML = Array.from({ length: CHECKIN_DAYS }, (_, index) => {
+                const date = addDays(CHECKIN_START, index);
+                const key = dateKey(date);
+                const record = checkins[key] || {};
+                const hasRecord = record.morning || record.evening;
+                const complete = record.morning && record.evening;
+                return `
+                    <button class="date-button ${key === selectedDate ? 'active' : ''} ${hasRecord ? 'has-record' : ''} ${complete ? 'complete' : ''}" data-date="${key}" aria-label="${date.getMonth() + 1}月${date.getDate()}日">
+                        <span>周${weekday[date.getDay()]}</span>
+                        <strong>${date.getDate()}</strong>
+                        <small>${date.getMonth() + 1}月</small>
+                    </button>
+                `;
+            }).join('');
+
+            strip.querySelectorAll('.date-button').forEach(button => {
+                button.addEventListener('click', () => {
+                    selectedDate = button.dataset.date;
+                    renderCheckins();
+                    requestAnimationFrame(() => {
+                        document.querySelector(`.date-button[data-date="${selectedDate}"]`)?.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+                    });
+                });
+            });
+
+            const date = new Date(`${selectedDate}T12:00:00`);
+            const record = selectedRecord();
+            const completedSessions = Number(record.morning) + Number(record.evening);
+            const completeDays = Object.values(checkins).filter(item => item.morning && item.evening).length;
+            document.getElementById('selectedDateLabel').textContent = `${date.getMonth() + 1}月${date.getDate()}日 · 周${weekday[date.getDay()]}`;
+            document.getElementById('completeDays').textContent = completeDays;
+            document.getElementById('checkinProgress').style.width = `${Math.round(completeDays / CHECKIN_DAYS * 100)}%`;
+
+            const status = document.getElementById('selectedStatus');
+            status.textContent = completedSessions === 2 ? '✓ 当日已完成' : `待完成 ${2 - completedSessions} 项`;
+            status.classList.toggle('complete', completedSessions === 2);
+
+            const morningButton = document.getElementById('morningCheckBtn');
+            morningButton.textContent = record.morning ? '✓ 早间已完成' : '完成早间训练';
+            morningButton.classList.toggle('checked', record.morning);
+
+            const eveningButton = document.getElementById('eveningCheckBtn');
+            eveningButton.textContent = record.evening ? '✓ 晚间已完成' : '完成晚间训练';
+            eveningButton.classList.toggle('checked', record.evening);
+        }
+
+        function toggleCheckin(session) {
+            const record = selectedRecord();
+            record[session] = !record[session];
+            saveCheckins();
+            renderCheckins();
         }
 
         // -------------------------------------------------------------
@@ -820,9 +1134,9 @@
             courses.forEach((item, index) => {
                 const idx = String(index + 1).padStart(2, '0');
                 let displayName = item.name;
-                let subText = '';
+                let subText = item.duration || '';
                 const match = item.name.match(/^(.*?)(\(.*\))$/);
-                if (match) {
+                if (match && !item.duration) {
                     displayName = match[1].trim();
                     subText = match[2];
                 }
@@ -943,6 +1257,9 @@
             // 渲染中午
             renderMidList();
 
+            // 渲染日期和打卡状态
+            renderCheckins();
+
             // 绑定重置按钮
             document.getElementById('resetMorningBtn')?.addEventListener('click', resetMorning);
             document.getElementById('resetEveningBtn')?.addEventListener('click', resetEvening);
@@ -950,6 +1267,14 @@
             // 绑定添加按钮
             document.getElementById('addMidBtn')?.addEventListener('click', addMidCourse);
             document.getElementById('clearMidBtn')?.addEventListener('click', clearMid);
+
+            // 绑定早晚打卡按钮
+            document.getElementById('morningCheckBtn')?.addEventListener('click', () => toggleCheckin('morning'));
+            document.getElementById('eveningCheckBtn')?.addEventListener('click', () => toggleCheckin('evening'));
+
+            requestAnimationFrame(() => {
+                document.querySelector(`.date-button[data-date="${selectedDate}"]`)?.scrollIntoView({ inline: 'center', block: 'nearest' });
+            });
 
             // 额外，如果占位按钮存在（已在 renderMidList 里绑定）
         });
